@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<!--<meta name="viewport" content="width=device-width">
+	<title>stopover_food</title>-->
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+   <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>stopover_food</title>
+	<style>
+		#header {
+			height: 200px;
+		}
+		body {
+    		margin: 0;
+    		display: flex;
+    		flex-flow: column;
+    		min-height: 100vh;
+		}
+		footer {
+    		background: #333333;
+    		color: #ffffff;
+    		height: 10px;
+		}
+		.btn-square {
+  			display: inline-block;
+  			padding: 0.5em 1em;
+  			text-decoration: none;
+  			background: #668ad8;/*ボタン色*/
+  			color: #FFF;
+  			border-bottom: solid 4px #627295;
+  			border-radius: 3px;
+		}
+		.btn-square:active {
+  			/*ボタンを押したとき*/
+  			-webkit-transform: translateY(4px);
+  			transform: translateY(4px);/*下に動く*/
+  			border-bottom: none;/*線を消す*/
+		}
+		.cp_ipselect {
+			position: relative;
+			width: 90%;
+			margin: 2em auto;
+			text-align: center;
+		}
+		.cp_sl06 {
+			position: relative;
+			font-family: inherit;
+			background-color: transparent;
+			width: 100%;
+			padding: 10px 10px 10px 0;
+			font-size: 18px;
+			border-radius: 0;
+			border: none;
+			border-bottom: 1px solid rgba(0,0,0, 0.3);
+		}
+		.cp_sl06:focus {
+			outline: none;
+			border-bottom: 1px solid rgba(0,0,0, 0);
+		}
+		.cp_ipselect .cp_sl06 {
+			appearance: none;
+			-webkit-appearance:none
+		}
+		.cp_ipselect select::-ms-expand {
+		display: none;
+		}
+		.cp_ipselect:after {
+			position: absolute;
+			top: 18px;
+			right: 10px;
+			width: 0;
+			height: 0;
+			padding: 0;
+			content: '';
+			border-left: 6px solid transparent;
+			border-right: 6px solid transparent;
+			border-top: 6px solid rgba(0, 0, 0, 0.3);
+			pointer-events: none;
+		}
+		.cp_sl06_selectlabel {
+			color: rgba(0,0,0, 0.5);
+			font-size: 18px;
+			font-weight: normal;
+			position: absolute;
+			pointer-events: none;
+			left: 0;
+			top: 10px;
+			transition: 0.2s ease all;
+		}
+			.cp_sl06:focus ~ .cp_sl06_selectlabel, .cp_sl06:valid ~ .cp_sl06_selectlabel {
+			color: #da3c41;
+			top: -20px;
+			transition: 0.2s ease all;
+			font-size: 14px;
+		}
+		.cp_sl06_selectbar {
+			position: relative;
+			display: block;
+			width: 100%;
+		}
+		.cp_sl06_selectbar:before, .cp_sl06_selectbar:after {
+			content: '';
+			height: 2px;
+			width: 0;
+			bottom: 1px;
+			position: absolute;
+			background: #da3c41;
+			transition: 0.2s ease all;
+		}
+		.cp_sl06_selectbar:before {
+			left: 50%;
+		}
+		.cp_sl06_selectbar:after {
+			right: 50%;
+		}
+		.cp_sl06:focus ~ .cp_sl06_selectbar:before, .cp_sl06:focus ~ .cp_sl06_selectbar:after {
+			width: 50%;
+		}
+		.cp_sl06_highlight {
+			position: absolute;
+			top: 25%;
+			left: 0;
+			pointer-events: none;
+			opacity: 0.5;
+		}
+
+		#content {
+			width: 70%;
+			margin: 0 auto;
+			border: solid 1px gray;
+			overflow-x: hidden;
+			flex: 1;
+		}
+		@media screen and (max-width: 812px) {
+			#content {
+				width: 98%;
+			}
+		}
+
+		form {
+			border: inset 2px gray;
+			text-align: center;
+			padding: 10px;
+		}
+
+		#foodList {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+		}
+
+		.food {
+			background-color: white; /* 色変更 */
+			box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+			border-radius:10px;
+			border:1px solid #f5f5f5;
+			margin: 5px auto;
+			display: inline-block;
+			width: 23%;
+			transition: all 250ms 0ms ease;
+		}
+
+		.food-header {
+			color: black;
+			padding: 3px;
+		}
+
+		.food:hover {
+			background-color: lightcyan;
+			box-shadow: 0 0 5px -1px gray;
+		}
+
+		@media screen and (max-width: 812px) {
+			.food {
+				width: 90%;
+			}
+		}
+
+		img {
+			max-width: 90%;
+			max-height: 250px;
+			margin: 10px auto;
+			display: block;
+			box-shadow: 2px 2px 2px gray;
+		}
+	</style>
+</head>
+<body>
+<div class="jumbotron" id="header">
+	<div class="container">
+		<h1 class="display-4">下車飯</h1>
+		<p class="lead">路線、乗車駅、降車駅の入力とカテゴリーを選択してください</p>
+	</div>
+</div>
+	<div id="content">
+		<form action="." method="get" name="fm" onsubmit="wait()">
+			<div class="form-group">
+				<div class="col-sm-12">
+					<input type="search" class="form-control" placeholder="路線名(JR山手線・東急東横線)" name="line" required>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-12">
+					<input type="search" class="form-control" placeholder="乗車駅名(新宿・横浜)" name="start" required>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-12">
+					<input type="search" class="form-control" placeholder="降車駅名(渋谷・自由が丘)" name="end" required>
+				</div>
+			</div>
+			<!-- -->
+			<div class="cp_ipselect">
+				<select class="cp_sl06" name="category" required>
+					<option value="" hidden disabled selected></option>
+					<option value="ra-men">ラーメン・つけ麺</option>
+				</select>
+				<span class="cp_sl06_highlight"></span>
+				<span class="cp_sl06_selectbar"></span>
+				<label class="cp_sl06_selectlabel">カテゴリーを選択してください</label>
+			</div>
+			<p><input class="btn-square" type="submit" value="下車！"></p>
+		</form>
+		<p>件数: {{ pagecount }}</p>
+		<div id="foodList">
+			{% for food in data %}
+			<div class="food" onclick="location = '{{ food.url }}';">
+				<b class="food-header">{{food.title}}</b>
+				<u><p style="color: #d3d3d3; font-size: 90%;">{{food.category}}<p/></u>
+				<img src="{{ food.img }}">
+				<p style="font-size: 90%">{{ food.station }}</p>
+			</div>
+			{% endfor %}
+		</div>
+		<p id="pages"></p>
+	</div>
+<footer class="jumbotron" id="fodder">
+	<div class="container">
+		<a href="https://api.gnavi.co.jp/api/scope/" target="_blank">
+			<img src="https://api.gnavi.co.jp/api/img/credit/api_155_20.gif" width="155" height="20" border="0" alt="グルメ情報検索サイト　ぐるなび">
+		</a>
+	</div>
+</footer>
+	<script>
+		function wait() {
+			foodList.innerHTML = "<p style=\"text-align: center;\">検索中です<br>しばらくおまちください</p>";
+		}
+
+		if (foodList.innerHTML.trim() == "") {
+			foodList.innerHTML = "<p>該当なし</p>";
+		}
+
+		fm.line.value = new URL(location).searchParams.get('line');
+		fm.start.value = new URL(location).searchParams.get('start');
+		fm.end.value = new URL(location).searchParams.get('end');
+		fm.category.value = new URL(location).searchParam.get('category');
+		page = new URL(location).searchParams.get('page');
+
+		if (isFinite(page) && page != null) {
+			page = page - 0;
+			if (!Number.isInteger(page)) {
+				page = 1;
+			}
+		} else {
+			page = 1;
+		}
+		if (page - 1 >= 1) {
+			var ancPrev = document.createElement("a");
+			query = new URLSearchParams({
+				"line": document.fm.line.value,
+				"start": document.fm.start.value,
+				"end": document.fm.end.value,
+				"category": document.fm.category.value,
+				"page": page - 1
+			}).toString();
+			ancPrev.setAttribute("href", "javascript:location='?" + query + "'")
+			ancPrev.innerText = "Prev";
+			pages.appendChild(ancPrev);
+		}
+		var currentPage = document.createElement("span");
+		currentPage.innerText = "  現在のページ: " + page + "  ";
+		pages.appendChild(currentPage);
+		if (page + 1 <= {{ pagecount }}) {
+			var ancNext = document.createElement("a");
+			query = new URLSearchParams({
+				"line": document.fm.line.value,
+				"start": document.fm.start.value,
+				"end": document.fm.end.value,
+				"category": document.fm.category.value,
+				"page": page + 1
+			}).toString();
+			ancNext.setAttribute("href", "javascript:location='?" + query + "'")
+			ancNext.innerText = "Next";
+			pages.appendChild(ancNext);
+		}
+	</script>
+   <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</body>
+</html>
