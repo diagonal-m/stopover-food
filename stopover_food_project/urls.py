@@ -18,5 +18,4 @@ from django.urls import path, include
 
 urlpatterns = [
     path('', include('stopover_food_app.urls')),
-    path('admin/', admin.site.urls),
 ]
