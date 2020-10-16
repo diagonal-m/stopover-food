@@ -6,6 +6,8 @@ import pandas as pd
 from . import guruanvi
 from .consts import GURUNAVI_KEY
 
+from typing import Tuple
+
 
 class StopoverFood:
     """
@@ -34,35 +36,38 @@ class StopoverFood:
         """
         self.df = pd.read_csv('./station_data/station.csv', encoding='cp932')
 
-    def _validation_line(self) -> bool:
+    def _validation_line(self) -> Tuple[bool, str]:
         """
         路線名が駅情報データに含まれるものかどうかを確認するメソッド
 
         @return: 路線名が正しいか否かのbool値
         """
-        is_validated = False
+        is_validated = True
+        message = '合格'
         line_list = self.df['line_name'].to_list()
 
         if not(self.line in line_list):
-            return True
+            return False, f'{self.line}は正しい路線名ではありません、正式名称で入力してくださいね'
 
-        return is_validated
+        return is_validated, message
 
-    def _validated_station(self) -> bool:
+    def _validated_station(self) -> tuple:
         """
         乗車駅と降車駅が指定された路線内に存在するかを確認するメソッド
 
         @return: 指定された路線内に存在するか否かのbool値
         """
-        is_validated = False
+        is_validated = True
+        message = '合格'
         df = self.df.copy()
-        start_and_end = {self.start_station, self.end_station}
-        stations_on_line = set(df[df['line_name'] == self.line]['station_name'].to_list())
+        start_and_end = [self.start_station, self.end_station]
+        stations_on_line = df[df['line_name'] == self.line]['station_name'].to_list()
 
-        if not start_and_end.issubset(stations_on_line):
-            return True
+        for station in start_and_end:
+            if not (station in stations_on_line):
+                return False, f'{station}は{self.line}の駅ではありません'
 
-        return is_validated
+        return is_validated, message
 
     def _get_section_stations(self) -> list:
         """
@@ -78,7 +83,7 @@ class StopoverFood:
         start, end = min(station_nums), max(station_nums)
 
         # 環状線対策
-        if self.line == 'JR山手線':
+        if self.line in ['JR山手線', '大阪環状線']:
             lon_lat_1 = section.query('@start <= index <= @end')[['lon', 'lat']]
             lon_lat_2 = section.query('@start >= index or index >= @end')[['lon', 'lat']]
             lon_lat = lon_lat_1 if (lon_lat_1.shape[0] < lon_lat_2.shape[0]) else lon_lat_2
@@ -108,15 +113,17 @@ class StopoverFood:
         """
         food_list = list()
         food_dict_list = list()
-        message = '合格'
+
         self._get_station_df()  # 駅情報のデータフレームを取得
         # 路線名バリデーション
-        if self._validation_line():
-            return food_list, f'{self.line}は正しい路線名ではありません、正式名称で入力してください'
+        is_validated, message = self._validation_line()
+        if not is_validated:
+            return food_list, message
 
         # 駅名バリデーション
-        if self._validated_station():
-            return food_list, f'指定された駅名が{self.line}に存在しません'
+        is_validated, message = self._validated_station()
+        if not is_validated:
+            return food_list, message
 
         # 区間内の全駅の緯度・経度のリスト
         stations = self._get_section_stations()
