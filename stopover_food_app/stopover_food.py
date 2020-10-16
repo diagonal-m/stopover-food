@@ -47,7 +47,7 @@ class StopoverFood:
         line_list = self.df['line_name'].to_list()
 
         if not(self.line in line_list):
-            return False, f'{self.line}は正しい路線名ではありません、正式名称で入力してくださいね'
+            return False, f'{self.line}は正しい路線名ではありません、正式名称で入力してください'
 
         return is_validated, message
 
