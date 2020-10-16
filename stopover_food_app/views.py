@@ -11,9 +11,10 @@ from .stopover_food import StopoverFood
 
 def index(request):
     """
+    requestから路線、乗車駅、降車駅、カテゴリーを取得する
 
-    @param request:
-    @return:
+    @param request: requests
+    @return: HttpResponse
     """
     # 指定した名前のテンプレートに対応したコンパイル済みのテンプレートを返す
     template = loader.get_template('stopover_food_app/index.html')

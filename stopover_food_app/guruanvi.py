@@ -38,7 +38,7 @@ def guruanvi_api(params: dict) -> List[list]:
     ぐるなびAPIを用いて飲食店を検索する関数
 
     @param params: パラメータ辞書 e.g.) {"key": API key, "lat": 35.409, "lng": 139.596, "range": 3, 'keyword': 'ラーメン'}
-    @return: ?
+    @return: 飲食店データリスト e.g.) [[店舗名称, 店舗URL, 住所, ..., 'ぐるなび'], [店舗名称, 店舗URL, ... ,'ぐるなび'], ...]
     """
     shop_datas = list()
     api_base = 'https://api.gnavi.co.jp/RestSearchAPI/v3/?'

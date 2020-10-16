@@ -2,7 +2,6 @@
 路線、乗車駅、降車駅を受け取り、区間内すべての飲食店情報(ver1はラーメンのみ)を取得して返すクラスを配置するモジュール
 """
 import pandas as pd
-# from gurunavi import guruanvi_api
 
 from . import guruanvi
 from .consts import GURUNAVI_KEY
@@ -119,8 +118,10 @@ class StopoverFood:
         if self._validated_station():
             return food_list, f'指定された駅名が{self.line}に存在しません'
 
+        # 区間内の全駅の緯度・経度のリスト
         stations = self._get_section_stations()
 
+        # ぐるなびAPIから飲食点情報のリストを取得
         food_list = self._exec_gurunavi_api(stations)
 
         # 店舗が存在しないとき
