@@ -18,31 +18,47 @@ def index(request):
     """
     # 指定した名前のテンプレートに対応したコンパイル済みのテンプレートを返す
     template = loader.get_template('stopover_food_app/index.html')
-    error_template = loader.get_template('stopover_food_app/error.html')
     # index.htmlに渡す辞書
     context = {
         "data": list(),
-        "pagecount": 0
+        "pagecount": 0,
+        "message": ""
     }
     # GET.__contains__('key): 指定のキーが設定されている場合にTrueを返す
     # line: 路線, start: 乗車駅, end: 降車駅, category: カテゴリーに対応する
     if (request.GET.__contains__('line') and request.GET.__contains__('start') and
             request.GET.__contains__('end') and request.GET.__contains__('category')):
 
-        if '' in [request.GET['line'], request.GET['start'], request.GET['end']]:
-            context["data"] = {'message': '未入力の項目があります'}
-            return HttpResponse(error_template.render(context, request))
-
+        # 飲食店情報取得
         sf = StopoverFood(request.GET['line'], request.GET['start'], request.GET['end'])
         data, message = sf.stopover_food()
 
+        # 飲食店情報が取得できなかった場合エラーメッセージ送信
         if len(data) == 0:
-            context["data"] = {'message': message}
-            return HttpResponse(error_template.render(context, request))
+            context["message"] = message
+            return HttpResponse(template.render(context, request))
 
-        context = {
-            "data": data,
-            "pagecount": len(data)
-        }
+        # ページ数
+        page_num = 40
+        pagecount = int(len(data) / page_num)
+        if len(data) / page_num - pagecount > 0:
+            pagecount += 1
+
+        # 2ページ目以降に遷移する場合
+        if request.GET.__contains__('page'):
+            page = int(request.GET['page']) - 1
+            if page < 0:
+                page = 0
+
+            data = data[page * page_num: page * page_num + page_num]
+
+            context["data"] = data
+            context["pagecount"] = pagecount
+
+        # 1ページ目
+        else:
+            data = data[0: page_num]
+            context["data"] = data
+            context["pagecount"] = pagecount
 
     return HttpResponse(template.render(context, request))

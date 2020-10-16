@@ -223,7 +223,6 @@
 			</div>
 			<p><input class="btn-square" type="submit" value="下車！"></p>
 		</form>
-		<p>件数: {{ pagecount }}</p>
 		<div id="foodList">
 			{% for food in data %}
 			<div class="food" onclick="location = '{{ food.url }}';">
@@ -234,6 +233,7 @@
 			</div>
 			{% endfor %}
 		</div>
+		<p>ページ数: {{ pagecount }}</p>
 		<p id="pages"></p>
 	</div>
 <footer class="jumbotron" id="fodder">
@@ -249,13 +249,13 @@
 		}
 
 		if (foodList.innerHTML.trim() == "") {
-			foodList.innerHTML = "<p>該当なし</p>";
+			foodList.innerHTML = "<p>{{ message }}</p>";
 		}
 
 		fm.line.value = new URL(location).searchParams.get('line');
 		fm.start.value = new URL(location).searchParams.get('start');
 		fm.end.value = new URL(location).searchParams.get('end');
-		fm.category.value = new URL(location).searchParam.get('category');
+		fm.category.value = new URL(location).searchParams.get('category');
 		page = new URL(location).searchParams.get('page');
 
 		if (isFinite(page) && page != null) {
