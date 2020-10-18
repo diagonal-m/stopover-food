@@ -4,7 +4,7 @@ import re
 import MeCab
 from pykakasi import kakasi
 
-from .consts import MECAB_NUM
+from consts import MECAB_NUM
 
 
 class RomanaizeST:
