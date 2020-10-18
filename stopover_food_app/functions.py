@@ -20,7 +20,7 @@ class RomanaizeST:
         k = kakasi()
         k.setMode('K', 'a')
         self.conv = k.getConverter()
-        self.tagger = MeCab.Tagger()
+        self.tagger = MeCab.Tagger('-d /var/lib/mecab/dic/debian')
 
     def katakanize(self, text: str) -> str:
         """

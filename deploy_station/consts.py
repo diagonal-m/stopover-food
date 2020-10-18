@@ -24,6 +24,6 @@ DL_URL = "dl"
 LOGIN_INFO = {
     'login': '1',
     'p': '0',
-    'ac': '',
-    'ps': ''
+    'ac': env('MAIL'),
+    'ps': env('PW')
 }  # ログインに必要な情報
