@@ -2,14 +2,16 @@
 路線、乗車駅、降車駅を受け取り、区間内すべての飲食店情報(ver1はラーメンのみ)を取得して返すクラスを配置するモジュール
 """
 import pandas as pd
+from Levenshtein import distance as levenshtein
 
 from . import guruanvi
 from .consts import GURUNAVI_KEY
+from .functions import RomanaizeST
 
 from typing import Tuple
 
 
-class StopoverFood:
+class StopoverFood(RomanaizeST):
     """
     下車飯クラス
     """
@@ -23,6 +25,7 @@ class StopoverFood:
         @param range_: 緯度・経度からの検索範囲(1: 300m, 2: 500m, 3: 1000m, 4: 2000m, 5: 3000m) default=3
         @param keyword: 検索キーワード default='ラーメン'
         """
+        super().__init__()
         self.line = line
         self.start_station = start_station.replace('駅', '')
         self.end_station = end_station.replace('駅', '')
@@ -51,6 +54,21 @@ class StopoverFood:
 
         return is_validated, message
 
+    def _any_chance_line(self) -> str:
+        """
+        レーベンシュタイン距離が近い路線名を3つ返す
+
+        @return: 追加メッセージ  e.g.) もしかして...〇〇？
+        """
+        roman_lines = list(self.df['line_name_roman'].unique())
+        lines = list(self.df['line_name'].unique())
+        inputed_line_roman = self.romanaize(self.line)[0]
+        dists = [levenshtein(inputed_line_roman, roman_line) for roman_line in roman_lines]
+        idx = sorted(range(len(dists)), key=lambda x: dists[x])[:3]
+        chance_line = [lines[i] for i in idx]
+
+        return f'。もしかして...{",".join(chance_line)}?'
+
     def _validated_station(self) -> tuple:
         """
         乗車駅と降車駅が指定された路線内に存在するかを確認するメソッド
@@ -59,15 +77,31 @@ class StopoverFood:
         """
         is_validated = True
         message = '合格'
+        error_station = ''
         df = self.df.copy()
         start_and_end = [self.start_station, self.end_station]
         stations_on_line = df[df['line_name'] == self.line]['station_name'].to_list()
 
         for station in start_and_end:
             if not (station in stations_on_line):
-                return False, f'{station}は{self.line}の駅ではありません'
+                return False, f'{station}は{self.line}の駅ではありません', station
 
-        return is_validated, message
+        return is_validated, message, error_station
+
+    def _any_chance_station(self, station_name: str) -> str:
+        """
+        レーベンシュタイン距離が最も近い駅名を返す
+
+        @return: 追加メッセージ  e.g.) もしかして...〇〇？
+        """
+        roman_stations = self.df[self.df['line_name'] == self.line]['station_name_roman'].to_list()
+        stations = self.df[self.df['line_name'] == self.line]['station_name'].to_list()
+        inputed_station_roman = self.romanaize(station_name)[0]
+        dists = [levenshtein(inputed_station_roman, roman_station) for roman_station in roman_stations]
+        idx = sorted(range(len(dists)), key=lambda x: dists[x])[0]
+        chance_station = stations[idx]
+
+        return f'。もしかして...{chance_station}?'
 
     def _get_section_stations(self) -> list:
         """
@@ -118,12 +152,14 @@ class StopoverFood:
         # 路線名バリデーション
         is_validated, message = self._validation_line()
         if not is_validated:
-            return food_list, message
+            plus_message = self._any_chance_line()
+            return food_list, message + plus_message
 
         # 駅名バリデーション
-        is_validated, message = self._validated_station()
+        is_validated, message, error_station = self._validated_station()
         if not is_validated:
-            return food_list, message
+            plus_message = self._any_chance_station(error_station)
+            return food_list, message + plus_message
 
         # 区間内の全駅の緯度・経度のリスト
         stations = self._get_section_stations()
@@ -148,7 +184,7 @@ class StopoverFood:
 
 
 if __name__ == '__main__':
-    sf = StopoverFood('ブルーライン', '上大岡', '港南中央')
+    sf = StopoverFood('ブルーライ', '上大岡', '港南中央')
     foods = sf.stopover_food()[0]
     for f in foods:
         print(f'{f[0]}: {f[7]}: {f[1]}')

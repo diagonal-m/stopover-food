@@ -4,12 +4,12 @@
 """
 from time import sleep
 from tempfile import NamedTemporaryFile
-from urllib.parse import urljoin
 
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
+from functions import RomanaizeST
 from consts import WAIT_TIME, CSV_STATION, HEADERS, BASE_URL, DL_PAGE_URL, DL_URL, LOGIN_INFO
 
 from typing import Tuple
@@ -132,11 +132,15 @@ def preprocess_line(df: pd.DataFrame) -> pd.DataFrame:
     @param df: 路線データのデータフレーム
     @return: 前処理済みデータフレーム
     """
-    line_cd, line_name = 'line_cd', 'line_name'
+    line_cd, line_name, line_name_roman = 'line_cd', 'line_name', 'line_name_roman'
     # 路線名の()内の文字列を削除する  e.g.) 'JR函館本線(函館～長万部)' → 'JR函館本線'
     df[line_name] = df[line_name].str.replace(r'\(.+?\)', '', regex=True)
 
-    return df[[line_cd, line_name]]
+    line_names = df[line_name].to_list()
+    rs = RomanaizeST()
+    df[line_name_roman] = [rs.romanaize(line)[0] for line in line_names]
+
+    return df[[line_cd, line_name, line_name_roman]]
 
 
 def preprocess_station(df: pd.DataFrame) -> pd.DataFrame:
@@ -147,10 +151,15 @@ def preprocess_station(df: pd.DataFrame) -> pd.DataFrame:
     @param df: 駅データのデータフレーム
     @return: 前処理済みデータフレーム
     """
-    headers = ['station_cd', 'station_name', 'line_cd', 'lon', 'lat']
+    roman = 'station_name_roman'
+    headers = ['station_cd', 'station_name', roman, 'line_cd', 'lon', 'lat']
 
     # 閉駅済みの駅を削除
     df = df[df.close_ymd == '0000-00-00']
+
+    station_names = df['station_name'].to_list()
+    rs = RomanaizeST()
+    df[roman] = [rs.romanaize(station)[0] for station in station_names]
 
     return df[headers]
 
