@@ -4,6 +4,8 @@ import re
 import MeCab
 from pykakasi import kakasi
 
+from .consts import MECAB_NUM
+
 
 class RomanaizeST:
     """
@@ -27,7 +29,7 @@ class RomanaizeST:
         morphed = [re.split(r"[,\t\s\n]", w) for w in self.tagger.parse(text).split("\n")]
         morphed.remove([""])
         morphed.remove(["EOS"])
-        k = [morph[-1] if morph[-1] != "*" else morph[0] for morph in morphed]
+        k = [morph[MECAB_NUM] if morph[MECAB_NUM] != "*" else morph[0] for morph in morphed]
 
         return "".join(k)
 

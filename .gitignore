@@ -3,4 +3,5 @@ stopover_food_app/__pycache__/
 stopover_food_app/migrations/__pycache__/__init__.cpython-36.pyc
 stopover_food_project/__pycache__/
 stopover_food_app/migrations/__pycache__/
+station_data/station.csv
 .env

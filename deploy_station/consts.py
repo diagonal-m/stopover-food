@@ -2,6 +2,13 @@
 駅データ.jpクローリングスクリプト用定数配置モジュール
 """
 from urllib.parse import urljoin
+import environ
+
+
+env = environ.Env()
+
+env.read_env('.env')
+MECAB_NUM = int(env('MECAB_NUM'))  # 環境依存定数
 
 WAIT_TIME = 1
 
