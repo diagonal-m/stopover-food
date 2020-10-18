@@ -98,10 +98,10 @@ class StopoverFood(RomanaizeST):
         stations = self.df[self.df['line_name'] == self.line]['station_name'].to_list()
         inputed_station_roman = self.romanaize(station_name)[0]
         dists = [levenshtein(inputed_station_roman, roman_station) for roman_station in roman_stations]
-        idx = sorted(range(len(dists)), key=lambda x: dists[x])[0]
-        chance_station = stations[idx]
+        idx = sorted(range(len(dists)), key=lambda x: dists[x])[:3]
+        chance_station = [stations[i] for i in idx]
 
-        return f'。もしかして...{chance_station}?'
+        return f'。もしかして...{",".join(chance_station)}?'
 
     def _get_section_stations(self) -> list:
         """

@@ -29,7 +29,10 @@ class RomanaizeST:
         morphed = [re.split(r"[,\t\s\n]", w) for w in self.tagger.parse(text).split("\n")]
         morphed.remove([""])
         morphed.remove(["EOS"])
-        k = [morph[-1] if morph[-1] != "*" else morph[0] for morph in morphed]
+        # 開発環境
+        #k = [morph[-1] if morph[-1] != "*" else morph[0] for morph in morphed]
+        # 本番環境
+        k = [morph[2] for morph in morphed]
 
         return "".join(k)
 
