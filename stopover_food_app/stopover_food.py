@@ -62,6 +62,9 @@ class StopoverFood(RomanaizeST):
         """
         roman_lines = list(self.df['line_name_roman'].unique())
         lines = list(self.df['line_name'].unique())
+        partial_matches = [line for line in lines if self.line in line]
+        if len(partial_matches) > 0:
+            return f'。もしかして{".".join(partial_matches[:3])}?'
         inputed_line_roman = self.romanaize(self.line)[0]
         dists = [levenshtein(inputed_line_roman, roman_line) for roman_line in roman_lines]
         idx = sorted(range(len(dists)), key=lambda x: dists[x])[:3]
