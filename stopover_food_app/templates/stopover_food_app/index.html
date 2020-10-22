@@ -9,8 +9,30 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <title>stopover_food</title>
 	<style>
-		#header {
-			height: 200px;
+		header {
+			height: 70px;
+			width: 100%;
+			border:1px solid #f5f5f5;
+			margin: 10px auto;
+			align-content: center;
+			box-shadow: 0 9px 3px -3px rgba(0,0,0,0.3);
+  			-webkit-box-shadow: 0 9px 3px -3px rgba(0,0,0,0.3);
+  			-moz-box-shadow: 0 9px 3px -3px rgba(0,0,0,0.3);
+		}
+		h1{
+			font-size: 25px;
+			text-shadow: 0 1px 0 #ccc,
+               	0 2px 0 #c9c9c9,
+               	0 3px 0 #bbb,
+               	0 4px 0 #b9b9b9,
+               	0 5px 0 #aaa,
+               	0 6px 1px rgba(0,0,0,.1),
+               	0 0 5px rgba(0,0,0,.1),
+               	0 1px 3px rgba(0,0,0,.3),
+               	0 3px 5px rgba(0,0,0,.2),
+               	0 5px 10px rgba(0,0,0,.25),
+               	0 10px 10px rgba(0,0,0,.2),
+               	0 20px 20px rgba(0,0,0,.15);
 		}
 		body {
     		margin: 0;
@@ -19,8 +41,7 @@
     		min-height: 100vh;
 		}
 		footer {
-    		background: #333333;
-    		color: #ffffff;
+    		background: #ffffff;
     		height: 10px;
 		}
 		.btn-square {
@@ -177,7 +198,6 @@
 				width: 90%;
 			}
 		}
-
 		img {
 			max-width: 90%;
 			max-height: 250px;
@@ -188,12 +208,12 @@
 	</style>
 </head>
 <body>
-<div class="jumbotron" id="header">
+<header>
 	<div class="container">
-		<h1 class="display-4">下車飯</h1>
-		<p class="lead">路線、乗車駅、降車駅の入力とカテゴリーを選択してください</p>
+		<h1>下車飯</h1>
+		<p class="lead" style="font-size: 15px">路線、乗車駅、降車駅の入力とカテゴリーを選択してください</p>
 	</div>
-</div>
+</header>
 	<div id="content">
 		<form action="." method="get" name="fm" onsubmit="wait()">
 			<div class="form-group">
@@ -236,7 +256,7 @@
 		<p>ページ数: {{ pagecount }}</p>
 		<p id="pages"></p>
 	</div>
-<footer class="jumbotron" id="fodder">
+<footer>
 	<div class="container">
 		<a href="https://api.gnavi.co.jp/api/scope/" target="_blank">
 			<img src="https://api.gnavi.co.jp/api/img/credit/api_155_20.gif" width="155" height="20" border="0" alt="グルメ情報検索サイト　ぐるなび">
