@@ -10,27 +10,30 @@ from .functions import RomanaizeST
 
 from typing import Tuple
 
+CATEGORY_DICT = {'ra-men': 'ラーメン', 'cafe': 'カフェ'}
+
 
 class StopoverFood(RomanaizeST):
     """
     下車飯クラス
     """
-    def __init__(self, line: str, start_station: str, end_station: str, range_: int = 3, keyword: str = 'ラーメン'):
+    def __init__(self, line: str, start_station: str, end_station: str, keyword: str, range_: int = 3):
         """
         初期化メソッド
 
         @param line: 路線名 e.g.) '東急東横線'
         @param start_station: 乗車駅 e.g.) '横浜'
         @param end_station: 降車駅 e.g.) '自由が丘'
-        @param range_: 緯度・経度からの検索範囲(1: 300m, 2: 500m, 3: 1000m, 4: 2000m, 5: 3000m) default=3
         @param keyword: 検索キーワード default='ラーメン'
+        @param range_: 緯度・経度からの検索範囲(1: 300m, 2: 500m, 3: 1000m, 4: 2000m, 5: 3000m) default=3
         """
         super().__init__()
         self.line = line
         self.start_station = start_station.replace('駅', '')
         self.end_station = end_station.replace('駅', '')
         self.df = None
-        self.api_params = {'key': GURUNAVI_KEY, 'lat': None, 'lng': None, 'range': range_, 'keyword': keyword}
+        self.api_params = {'key': GURUNAVI_KEY, 'lat': None, 'lng': None,
+                           'range': range_, 'keyword': CATEGORY_DICT[keyword]}
 
     def _get_station_df(self) -> None:
         """
@@ -173,6 +176,12 @@ class StopoverFood(RomanaizeST):
         # 店舗が存在しないとき
         if len(food_list) == 0:
             return food_dict_list, "指定された条件の店舗が存在しません"
+
+        # 重複削除
+        duplications = list()
+        food_list = [
+            food for food in food_list if food not in duplications and not duplications.append(food)
+        ]
 
         for food in food_list:
             food_dict_list.append({

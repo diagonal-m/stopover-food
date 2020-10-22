@@ -12,6 +12,8 @@ from typing import List
 
 MAX_RETRY_COUNT = 3
 WAIT_TIME = 1
+REGULAR_CATEGORY_DICT = {'ラーメン': r'ラーメン|らーめん|油そば|坦々麺|タンタン|たんたん|拉麺',
+                         'カフェ': r'カフェ|喫茶店|コーヒー'}
 
 
 def get_response(url: str) -> requests:
@@ -57,10 +59,9 @@ def guruanvi_api(params: dict) -> List[list]:
         return shop_datas
 
     result_list = json.loads(response.text)['rest']
-
     for shop_data in result_list:
-        # ラーメン以外のカテゴリーのものが検索結果に含まれるため、カテゴリーにラーメン関連キーワードを含む場合のみ抽出
-        if re.search(r'ラーメン|らーめん|油そば|坦々麺|タンタン|たんたん|拉麺', shop_data['category']):
+        # キーワード以外のカテゴリーのものが検索結果に含まれるため、カテゴリーにキーワードの関連カテゴリーを含む場合のみ抽出
+        if re.search(REGULAR_CATEGORY_DICT[params['keyword']], shop_data['category']):
             shop_datas.append(
                 [
                     shop_data["name"],  # 店舗名称
@@ -78,6 +79,7 @@ def guruanvi_api(params: dict) -> List[list]:
                     "ぐるなび"
                 ]
             )
+
     return shop_datas
 
 

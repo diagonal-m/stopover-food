@@ -30,7 +30,7 @@ def index(request):
             request.GET.__contains__('end') and request.GET.__contains__('category')):
 
         # 飲食店情報取得
-        sf = StopoverFood(request.GET['line'], request.GET['start'], request.GET['end'])
+        sf = StopoverFood(request.GET['line'], request.GET['start'], request.GET['end'], request.GET['category'])
         data, message = sf.stopover_food()
 
         # 飲食店情報が取得できなかった場合エラーメッセージ送信
