@@ -148,9 +148,8 @@
 		}
 
 		#content {
-			width: 70%;
+			width: 60%;
 			margin: 0 auto;
-			border: solid 1px gray;
 			overflow-x: hidden;
 			flex: 1;
 		}
@@ -161,9 +160,12 @@
 		}
 
 		form {
-			border: inset 2px gray;
 			text-align: center;
 			padding: 10px;
+			box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+			border-radius:10px;
+			border:1px solid #f5f5f5;
+			margin: 5px auto;
 		}
 
 		#foodList {
@@ -179,13 +181,13 @@
 			border:1px solid #f5f5f5;
 			margin: 5px auto;
 			display: inline-block;
-			width: 23%;
+			width: 95%;
 			transition: all 250ms 0ms ease;
 		}
 
 		.food-header {
-			color: black;
 			padding: 3px;
+			text-align: center;
 		}
 
 		.food:hover {
@@ -198,10 +200,15 @@
 				width: 90%;
 			}
 		}
-		img {
-			max-width: 90%;
-			max-height: 250px;
+		.food-img {
+			max-width: 80%;
+			width: 120px;
+			height: 135px;
+			max-height: 150px;
 			margin: 10px auto;
+			margin-left: 5px;
+			margin-top: 0;
+			margin-right: 10px;
 			display: block;
 			box-shadow: 2px 2px 2px gray;
 		}
@@ -247,10 +254,16 @@
 		<div id="foodList">
 			{% for food in data %}
 			<div class="food" onclick="location = '{{ food.url }}';">
-				<b class="food-header">{{food.title}}</b>
-				<u><p style="color: #d3d3d3; font-size: 90%;">{{food.category}}<p/></u>
-				<img src="{{ food.img }}">
-				<p style="font-size: 90%">{{ food.station }}</p>
+				<h5 class="food-header" style="margin-bottom: 0"><a href='{{ food.url }}'>{{food.title}}</a></h5>
+				<p style="text-align: center; font-size: 85%; font-family: Helvetica; margin-bottom: 0">{{ food.pr_text }}<br>
+				<hr style="width: 90%; align: center; margin-top: 0"></p>
+				<div class="food-info">
+					<img class="food-img" src="{{ food.img }}" align="left" onerror="this.src='http://design-ec.com/d/e_others_50/l_e_others_500.png'"/>
+					<p style="color: #d3d3d3; font-size: 90%; padding-left: 10px">{{food.category}}</p>
+					<p style="margin-bottom: 0">基本情報<br>
+					<hr style="width: 90%; align: right; margin-top: 0"></p>
+					<p style="font-size: 80%">{{ food.open_time }}<br>{{ food.address }}<br>{{ food.tel }}</p>
+				</div>
 			</div>
 			{% endfor %}
 		</div>

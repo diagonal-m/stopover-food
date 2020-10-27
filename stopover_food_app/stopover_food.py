@@ -1,6 +1,7 @@
 """
 路線、乗車駅、降車駅を受け取り、区間内すべての飲食店情報(ver1はラーメンのみ)を取得して返すクラスを配置するモジュール
 """
+import re
 import pandas as pd
 from Levenshtein import distance as levenshtein
 
@@ -186,10 +187,14 @@ class StopoverFood(RomanaizeST):
         for food in food_list:
             food_dict_list.append({
                 "title": food[0],
-                "category": food[11],
+                "pr_text": food[9] if len(food[9]) < 30 else food[9][:30] + '...',
+                "category": f'{food[7]} {food[8]}分 / {food[11]}',  # e.g.) 駅名 徒歩○分 / ラーメン
                 "url": food[1],
                 "img": food[10],
-                "station": f'{food[7]} {food[8]}分'  # 駅名 徒歩○分
+                "address": f'住所: {food[2][9:] if (food[2] and len(food[2][9:]) < 24) else food[2][9:30] + "..."}',
+                "tel": f'TEL: {food[3]}',
+                "station": f'{food[7]} {food[8]}分',  # 駅名 徒歩○分
+                "open_time": f'OPEN: {food[4] if len(food[4]) < 30 else ""}'
             })
 
         return food_dict_list, message
