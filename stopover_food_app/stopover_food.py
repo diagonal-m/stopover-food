@@ -187,7 +187,7 @@ class StopoverFood(RomanaizeST):
         for food in food_list:
             food_dict_list.append({
                 "title": food[0],
-                "pr_text": food[9] if len(food[9]) < 55 else food[9][:55] + '...',
+                "pr_text": food[9] if len(food[9]) < 48 else food[9][:48] + '...',
                 "category": f'{food[7]} {food[8]}分 / {food[11]}',  # e.g.) 駅名 徒歩○分 / ラーメン
                 "url": food[1],
                 "img": food[10],
