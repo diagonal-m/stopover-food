@@ -264,7 +264,7 @@
 		<div id="foodList">
 			{% for food in data %}
 			<div class="food" onclick="location = '{{ food.url }}';">
-				<h5 class="food-header" style="margin-bottom: 0"><a href='{{ food.url }}'>{{food.title}}</a></h5>
+				<h5 class="food-header" style="margin-bottom: 0; white-space: nowrap;"><a href='{{ food.url }}'>{{food.title}}</a></h5>
 				<p style="text-align: center; font-size: 85%; font-family: Helvetica; margin-bottom: 0">{{ food.pr_text }}<br>
 				<hr style="width: 90%; align: center; margin-top: 0"></p>
 				<div class="food-info">
@@ -272,7 +272,7 @@
 					<p style="color: #d3d3d3; font-size: 80%; padding-left: 10px; margin: 0.1em">{{food.category}}</p>
 					<p style="margin: 0">基本情報<br>
 					<hr style="width: 90%; align: right; margin: 0"></p>
-					<p class="food-info2" style="font-size: 75%; margin: 0.1em">{{ food.open_time }}<br>{{ food.address }}<br>{{ food.tel }}</p>
+					<p class="food-info2" style="font-size: 75%; margin: 0.1em; white-space: nowrap;">{{ food.open_time }}<br>{{ food.tel }}<br>{{ food.address }}</p>
 				</div>
 			</div>
 			{% endfor %}
