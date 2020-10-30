@@ -4,6 +4,7 @@
 import re
 from time import sleep
 import requests
+from bs4 import BeautifulSoup
 import json
 
 from .consts import GURUNAVI_KEY
@@ -81,6 +82,31 @@ def guruanvi_api(params: dict) -> List[list]:
             )
 
     return shop_datas
+
+
+def get_img(data: list) -> list:
+    """
+    ぐるなびから画像をスクレイピングしてcontextに加える関数
+
+    @param data: 飲食店情報の辞書のリスト
+    @return: 画像情報を加えた飲食店情報の辞書のリスト
+    """
+    new_data = list()
+    for d in data:
+        if d['url'] and d['img'] == '':
+            try:
+                response = requests.get(d['url'], timeout=(3.0, 3)).text
+                soup = BeautifulSoup(response, 'html.parser')
+                img = soup.find('div', id='motif-slider-main').find('img').attrs['src']
+                d['img'] = 'https:' + img
+                new_data.append(d)
+            except Exception:
+                new_data.append(d)
+                continue
+        else:
+            new_data.append(d)
+
+    return new_data
 
 
 if __name__ == '__main__':

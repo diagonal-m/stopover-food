@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from django.template import loader
 
 from .stopover_food import StopoverFood
+from .guruanvi import get_img
 
 
 def index(request):
@@ -39,7 +40,7 @@ def index(request):
             return HttpResponse(template.render(context, request))
 
         # ページ数
-        page_num = 40
+        page_num = 15
         pagecount = int(len(data) / page_num)
         if len(data) / page_num - pagecount > 0:
             pagecount += 1
@@ -52,13 +53,12 @@ def index(request):
 
             data = data[page * page_num: page * page_num + page_num]
 
-            context["data"] = data
-            context["pagecount"] = pagecount
-
         # 1ページ目
         else:
             data = data[0: page_num]
-            context["data"] = data
-            context["pagecount"] = pagecount
+
+        data = get_img(data)
+        context["data"] = data
+        context["pagecount"] = pagecount
 
     return HttpResponse(template.render(context, request))
