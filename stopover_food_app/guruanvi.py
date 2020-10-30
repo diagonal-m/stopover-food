@@ -3,6 +3,7 @@
 """
 import re
 from time import sleep
+from concurrent.futures import ThreadPoolExecutor
 import requests
 from bs4 import BeautifulSoup
 import json
@@ -84,27 +85,38 @@ def guruanvi_api(params: dict) -> List[list]:
     return shop_datas
 
 
+def get_src(store_data) -> dict:
+    """
+    個別の店舗情報からscrタグを取得、店舗情報に追加して返す
+
+    @param store_data: 店舗情報
+    @return: 画像情報を追加した店舗情報
+    """
+    if store_data['url'] and store_data['img'] == '':
+        try:
+            response = requests.get(store_data['url'], timeout=(3.0, 3)).text
+            sleep(0.5)
+            soup = BeautifulSoup(response, 'html.parser')
+            img = soup.find('div', id='motif-slider-main').find('img').attrs['src']
+            store_data['img'] = 'https:' + img
+            return store_data
+        except Exception:
+            return store_data
+    else:
+        return store_data
+
+
 def get_img(data: list) -> list:
     """
-    ぐるなびから画像をスクレイピングしてcontextに加える関数
+    ぐるなびから画像をスクレイピングして飲食店情報に加える関数
+    時間削減のため並列処理を実施
 
     @param data: 飲食店情報の辞書のリスト
     @return: 画像情報を加えた飲食店情報の辞書のリスト
     """
-    new_data = list()
-    for d in data:
-        if d['url'] and d['img'] == '':
-            try:
-                response = requests.get(d['url'], timeout=(3.0, 3)).text
-                soup = BeautifulSoup(response, 'html.parser')
-                img = soup.find('div', id='motif-slider-main').find('img').attrs['src']
-                d['img'] = 'https:' + img
-                new_data.append(d)
-            except Exception:
-                new_data.append(d)
-                continue
-        else:
-            new_data.append(d)
+    with ThreadPoolExecutor(5) as e:
+        ret = e.map(get_src, data)
+    new_data = [r for r in ret]
 
     return new_data
 
