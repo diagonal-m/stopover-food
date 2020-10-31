@@ -221,6 +221,9 @@
 				width: 100px;
 				height: 110px;
 			}
+			.food-info2 {
+				font-size: 75%;
+			}
 		}
 	</style>
 </head>
@@ -269,9 +272,11 @@
 				<hr style="width: 90%; align: center; margin-top: 0"></p>
 				<div class="food-info">
 					<img class="food-img" src="{{ food.img }}" align="left" onerror="this.src='http://design-ec.com/d/e_others_50/l_e_others_500.png'"/>
-					<p style="color: #d3d3d3; font-size: 80%; padding-left: 10px; margin: 0.1em">{{food.category}}</p>
+					<p style="color: #a9a9a9; font-size: 85%; margin: 0.1em; white-space: nowrap; overflow: auto;">{{food.station}} / {{food.category}}</p>
 					<u><p style="margin: 0">基本情報</p></u>
-					<p class="food-info2" style="font-size: 75%; margin: 0.1em; white-space: nowrap; overflow: auto;">{{ food.open_time }}<br>{{ food.tel }}<br>{{ food.address }}</p>
+					<p class="food-info2" style="font-size: 90%; margin: 0.1em; white-space: nowrap; overflow: auto;">{{ food.open_time }}</p>
+					<p class="food-info2" style="font-size: 90%; margin: 0.1em; white-space: nowrap; overflow: auto;">{{ food.tel }}</p>
+					<p class="food-info2" style="font-size: 90%; margin: 0.1em; white-space: nowrap; overflow: auto;">{{ food.address }}</p>
 				</div>
 			</div>
 			{% endfor %}

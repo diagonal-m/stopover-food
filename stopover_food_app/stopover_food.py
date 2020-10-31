@@ -34,7 +34,7 @@ class StopoverFood(RomanaizeST):
         self.end_station = end_station.replace('駅', '')
         self.df = None
         self.api_params = {'key': GURUNAVI_KEY, 'lat': None, 'lng': None,
-                           'range': range_, 'keyword': CATEGORY_DICT[keyword]}
+                           'range': range_, 'keyword': CATEGORY_DICT[keyword], 'station': None}
 
     def _get_station_df(self) -> None:
         """
@@ -125,11 +125,11 @@ class StopoverFood(RomanaizeST):
 
         # 環状線対策
         if self.line in ['JR山手線', '大阪環状線']:
-            lon_lat_1 = section.query('@start <= index <= @end')[['lon', 'lat']]
-            lon_lat_2 = section.query('@start >= index or index >= @end')[['lon', 'lat']]
+            lon_lat_1 = section.query('@start <= index <= @end')[['lon', 'lat', 'station_name']]
+            lon_lat_2 = section.query('@start >= index or index >= @end')[['lon', 'lat', 'station_name']]
             lon_lat = lon_lat_1 if (lon_lat_1.shape[0] < lon_lat_2.shape[0]) else lon_lat_2
         else:
-            lon_lat = section.query('@start <= index <= @end')[['lon', 'lat']]
+            lon_lat = section.query('@start <= index <= @end')[['lon', 'lat', 'station_name']]
 
         return [tuple(s[1:]) for s in lon_lat.itertuples()]
 
@@ -140,8 +140,8 @@ class StopoverFood(RomanaizeST):
         @return: 飲食点情報のリスト
         """
         food_list = list()
-        for lon, lat in station_list:
-            self.api_params['lat'], self.api_params['lng'] = lat, lon
+        for lon, lat, station in station_list:
+            self.api_params['lat'], self.api_params['lng'], self.api_params['station'] = lat, lon, station
             food_list.extend(guruanvi.guruanvi_api(self.api_params))
 
         return food_list
@@ -178,26 +178,27 @@ class StopoverFood(RomanaizeST):
         if len(food_list) == 0:
             return food_dict_list, "指定された条件の店舗が存在しません"
 
-        # 重複削除
-        duplications = list()
-        food_list = [
-            food for food in food_list if food not in duplications and not duplications.append(food)
-        ]
-
         for food in food_list:
             food_dict_list.append({
                 "title": food[0],
                 "pr_text": food[9] if len(food[9]) < 48 else food[9][:48] + '...',
-                "category": f'{food[7]} {food[8]}分 / {food[11]}',  # e.g.) 駅名 徒歩○分 / ラーメン
+                "category": food[11],  # e.g.) ラーメン
                 "url": food[1],
                 "img": food[10],
-                "address": f'住所: {food[2][9:] if (food[2] and len(food[2][9:]) < 24) else food[2][9:30] + "..."}',
+                "address": f'住所: {food[2][9:]}',
                 "tel": f'TEL: {food[3]}',
-                "station": f'{food[7]} {food[8]}分',  # 駅名 徒歩○分
-                "open_time": f'OPEN: {food[4] if len(food[4]) < 30 else ""}'
+                "station": food[12] + ": " + str(int(food[13])) + 'm' if food[13] <= 1000 else "-",
+                "open_time": f'OPEN: {food[4] if food[4] != food[9] else ""}'  # pr文が入ってることがあるのでその対策
             })
 
-        return food_dict_list, message
+        food_dict = dict()
+        for food in food_dict_list:
+            if food['title'] in food_dict:
+                food_dict[food['title']]['station'] += f" {food['station']}"
+                continue
+            food_dict[food['title']] = food
+
+        return list(food_dict.values()), message
 
 
 if __name__ == '__main__':

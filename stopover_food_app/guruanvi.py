@@ -4,6 +4,7 @@
 import re
 from time import sleep
 from concurrent.futures import ThreadPoolExecutor
+from geopy.distance import geodesic
 import requests
 from bs4 import BeautifulSoup
 import json
@@ -66,18 +67,20 @@ def guruanvi_api(params: dict) -> List[list]:
         if re.search(REGULAR_CATEGORY_DICT[params['keyword']], shop_data['category']):
             shop_datas.append(
                 [
-                    shop_data["name"],  # 店舗名称
-                    shop_data["url"],  # PCサイトURL
-                    shop_data["address"],  # 住所
-                    shop_data['tel'],  # 電話番号
-                    shop_data['opentime'],  # 営業時間
-                    shop_data['holiday'],  # 休業日
-                    shop_data["budget"],  # 平均予算
-                    shop_data['access']['station'],  # 駅名
-                    shop_data['access']['walk'],  # 徒歩(分)
-                    shop_data['pr']['pr_short'],  # PR文(短)
-                    shop_data["image_url"]['shop_image1'],  # 店舗画像１のurl
-                    shop_data['category'],  # カテゴリー
+                    shop_data["name"],  # 0. 店舗名称
+                    shop_data["url"],  # 1. PCサイトURL
+                    shop_data["address"],  # 2. 住所
+                    shop_data['tel'],  # 3. 電話番号
+                    shop_data['opentime'],  # 4. 営業時間
+                    shop_data['holiday'],  # 5. 休業日
+                    shop_data["budget"],  # 6. 平均予算
+                    shop_data['access']['station'],  # 7. 駅名
+                    shop_data['access']['walk'],  # 8. 徒歩(分)
+                    shop_data['pr']['pr_short'],  # 9. PR文(短)
+                    shop_data["image_url"]['shop_image1'],  # 10. 店舗画像１のurl
+                    shop_data['category'],  # 11. カテゴリー
+                    params['station'] + '駅',  # 12. 駅名(固定)
+                    geodesic((params['lat'], params['lng']), (shop_data['latitude'], shop_data['longitude'])).m,
                     "ぐるなび"
                 ]
             )
