@@ -187,7 +187,7 @@ class StopoverFood(RomanaizeST):
                 "img": food[10],
                 "address": f'住所: {food[2][9:]}',
                 "tel": f'TEL: {food[3]}',
-                "station": food[12] + ": " + str(int(food[13])) + 'm' if food[13] <= 1000 else "-",
+                "station": food[12] + ": " + str(int(food[13])) + 'm' if food[13] <= 1000 else food[12],
                 "open_time": f'OPEN: {food[4] if food[4] != food[9] else ""}'  # pr文が入ってることがあるのでその対策
             })
 
