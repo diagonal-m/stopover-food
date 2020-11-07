@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-{% load static %}
 <html>
 <head>
 	<meta charset="utf-8">
@@ -221,10 +220,9 @@
 			}
 		}
 		.demo_item {
-			width: 50px;
-			height: 50px;
-
-			background-image: url("{% static 'stopover_food_app/train.png' %}");
+			width: 80px;
+			height: 80px;
+			background-image: url("http://illustrain.com/img/work/2016/illustrain06-norimono15.png");
 			background-size: 100% 100%;
 			background-position: 0 0;
 			background-repeat: no-repeat;
@@ -243,15 +241,16 @@
 		.demo_stage{
     		position: relative;
     		width: 100%;
-    		height: 65px;
-    		top: 0px;
+    		height: 50px;
+    		top: 0;
+			margin-bottom: 30px;
     		display: block;
 
 		}
 		.demo_wrap{
 			display: block;
     		position: absolute;
-    		top: 20px;
+    		top: 0;
     		animation-fill-mode: forwards;
     		animation-timing-function: linear;
     		animation-duration: 15s;
@@ -330,6 +329,7 @@
 			</div>
 			<p><input class="btn-square" type="submit" value="下車！"></p>
 		</form>
+		<div id="loading"></div>
 		<div id="foodList">
 			{% for food in data %}
 			<div class="food" onclick="location = '{{ food.url }}';">
@@ -359,7 +359,7 @@
 </footer>
 	<script>
 		function wait() {
-			foodList.innerHTML = "<div class=\"demo_stage\"><div class=\"demo_wrap\" data-order=\"right\"><span class=\"demo_item anime\"></span></div></div>";
+			loading.innerHTML = "<div class=\"demo_stage\"><div class=\"demo_wrap\" data-order=\"right\"><span class=\"demo_item anime\"></span></div></div>";
 		}
 
 		if (foodList.innerHTML.trim() == "") {
