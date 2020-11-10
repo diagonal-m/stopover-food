@@ -167,8 +167,8 @@ class StopoverFood(RomanaizeST):
         food_list = list()
         food_dict_list = list()
 
-        self._get_station_df()
-        # self._get_station_df_db()  # 駅情報のデータフレームを取得
+        # self._get_station_df()
+        self._get_station_df_db()  # 駅情報のデータフレームを取得
         # 路線名バリデーション
         is_validated, message = self._validation_line()
         if not is_validated:

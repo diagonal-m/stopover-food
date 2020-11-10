@@ -232,7 +232,7 @@ def main():
     create_table(line_station[HEADERS])
 
     # csvファイルとして出力
-    line_station[HEADERS].to_csv(CSV_STATION, encoding='cp932', index=False)
+    # line_station[HEADERS].to_csv(CSV_STATION, encoding='cp932', index=False)
 
 
 if __name__ == '__main__':
