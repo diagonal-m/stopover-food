@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 from pathlib import Path
 
-from .consts import KEY, HOST
+from .consts import KEY, HOST, DATABASE
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -76,10 +76,14 @@ WSGI_APPLICATION = 'stopover_food_project.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+   'default': {
+       'ENGINE': 'django.db.backends.postgresql',
+       'NAME': DATABASE['dbname'],
+       'USER': DATABASE['user'],
+       'PASSWORD': DATABASE['password'],
+       'HOST': DATABASE['host'],
+       'PORT': int(DATABASE['port']),
+   }
 }
 
 # Password validation

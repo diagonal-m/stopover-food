@@ -8,9 +8,10 @@ from tempfile import NamedTemporaryFile
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+import psycopg2
 
 from functions import RomanaizeST
-from consts import WAIT_TIME, CSV_STATION, HEADERS, BASE_URL, DL_PAGE_URL, DL_URL, LOGIN_INFO
+from consts import WAIT_TIME, CSV_STATION, HEADERS, BASE_URL, DL_PAGE_URL, DL_URL, LOGIN_INFO, DATABASE
 
 from typing import Tuple
 
@@ -138,7 +139,7 @@ def preprocess_line(df: pd.DataFrame) -> pd.DataFrame:
 
     line_names = df[line_name].to_list()
     rs = RomanaizeST()
-    df[line_name_roman] = [rs.romanaize(line)[0] for line in line_names]
+    df[line_name_roman] = [rs.romanaize(line)[0].replace("'", "") for line in line_names]
 
     return df[[line_cd, line_name, line_name_roman]]
 
@@ -159,9 +160,42 @@ def preprocess_station(df: pd.DataFrame) -> pd.DataFrame:
 
     station_names = df['station_name'].to_list()
     rs = RomanaizeST()
-    df[roman] = [rs.romanaize(station)[0] for station in station_names]
+    df[roman] = [rs.romanaize(station)[0].replace("'", "") for station in station_names]
 
     return df[headers]
+
+
+def create_table(df: pd.DataFrame) -> None:
+    """
+    前処理済みのデータフレームを元にテーブルを作成する
+
+    @param df: 前処理済みのデータフレーム
+    """
+    table_name = 'station_info'
+
+    with psycopg2.connect(**DATABASE) as conn:
+        cur = conn.cursor()
+        drop_sql = "DROP TABLE IF EXISTS {};"
+        create_sql = """
+            CREATE TABLE {} (
+                index INTEGER,
+                line_cd  INTEGER,
+                station_cd  INTEGER,
+                line_name  VARCHAR (250),
+                line_name_roman VARCHAR (250),
+                station_name VARCHAR (250),
+                station_name_roman VARCHAR (250),
+                lat NUMERIC,
+                lon NUMERIC
+            );
+            """
+        cur.execute(drop_sql.format(table_name))
+        cur.execute(create_sql.format(table_name))
+    with psycopg2.connect(**DATABASE) as conn:
+        cur = conn.cursor()
+        sql = "INSERT INTO {} VALUES {}"
+        for line in df.itertuples():
+            cur.execute(sql.format(table_name, tuple(line)))
 
 
 def main():
@@ -193,6 +227,9 @@ def main():
 
     # line_cdをキーに結合
     line_station = pd.merge(station_df, line_df, on='line_cd')
+
+    # テーブル作成
+    create_table(line_station[HEADERS])
 
     # csvファイルとして出力
     line_station[HEADERS].to_csv(CSV_STATION, encoding='cp932', index=False)

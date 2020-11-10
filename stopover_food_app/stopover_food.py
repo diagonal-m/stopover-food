@@ -3,10 +3,11 @@
 """
 import re
 import pandas as pd
+import psycopg2
 from Levenshtein import distance as levenshtein
 
 from . import guruanvi
-from .consts import GURUNAVI_KEY
+from .consts import GURUNAVI_KEY, DATABASE
 from .functions import RomanaizeST
 
 from typing import Tuple
@@ -42,6 +43,17 @@ class StopoverFood(RomanaizeST):
         データフレームとして読み込む(とりあえずCSVファイルから)
         """
         self.df = pd.read_csv('./station_data/station.csv', encoding='cp932')
+
+    def _get_station_df_db(self) -> None:
+        """
+        「路線番号」、「駅番号」、「路線名」、「駅名」、「緯度」、「経度」の駅情報データを
+        データフレームとして読み込む(とりあえずCSVファイルから)
+        """
+        with psycopg2.connect(**DATABASE) as conn:
+            sql = "select * from station_info;"
+            df = pd.read_sql(sql, conn)
+            df.index = df['index']
+        self.df = df
 
     def _validation_line(self) -> Tuple[bool, str]:
         """
@@ -155,7 +167,8 @@ class StopoverFood(RomanaizeST):
         food_list = list()
         food_dict_list = list()
 
-        self._get_station_df()  # 駅情報のデータフレームを取得
+        self._get_station_df()
+        # self._get_station_df_db()  # 駅情報のデータフレームを取得
         # 路線名バリデーション
         is_validated, message = self._validation_line()
         if not is_validated:

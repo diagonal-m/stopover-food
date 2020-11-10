@@ -27,3 +27,11 @@ LOGIN_INFO = {
     'ac': env('MAIL'),
     'ps': env('PW')
 }  # ログインに必要な情報
+
+DATABASE = {
+    "dbname": env('DBNAME'),
+    "host": env('DB_HOST'),
+    "user": env('DB_USER'),
+    "password": env('DB_PASSWORD'),
+    "port": env('DB_PORT')
+}
