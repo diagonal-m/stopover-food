@@ -3,6 +3,7 @@
 """
 import re
 import pandas as pd
+import numpy as np
 import psycopg2
 from Levenshtein import distance as levenshtein
 
@@ -143,7 +144,10 @@ class StopoverFood(RomanaizeST):
         else:
             lon_lat = section.query('@start <= index <= @end')[['lon', 'lat', 'station_name']]
 
-        return [tuple(s[1:]) for s in lon_lat.itertuples()]
+        stations = [tuple(s[1:]) for s in lon_lat.itertuples()]
+
+        # 乗車駅 → 降車駅順になるように返す
+        return stations[::-1] if np.argmax(station_nums) == 0 else stations
 
     def _exec_gurunavi_api(self, station_list: list) -> list:
         """

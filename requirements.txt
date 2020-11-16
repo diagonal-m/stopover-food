@@ -4,6 +4,7 @@ django-environ
 psycopg2>=2.7,<3.0
 psycopg2-binary
 pandas==1.1.3
+numpy
 requests==2.24.0
 pykakasi
 mecab-python3
