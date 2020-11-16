@@ -101,7 +101,7 @@ def get_src(store_data) -> dict:
             sleep(0.5)
             soup = BeautifulSoup(response, 'html.parser')
             img = soup.find('div', id='motif-slider-main').find('img').attrs['src']
-            store_data['img'] = 'https:' + img
+            store_data['img'] = img
             return store_data
         except Exception:
             return store_data
