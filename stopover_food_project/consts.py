@@ -14,3 +14,5 @@ DATABASE = {
     "password": env('DB_PASSWORD'),
     "port": env('DB_PORT')
 }
+
+DEB = int(env('DEBUG'))
