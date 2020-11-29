@@ -1,0 +1,281 @@
+header {
+    height: 90px;
+    width: 100%;
+    border:1px solid #f5f5f5;
+    margin-top: 0;
+    align-content: center;
+    background-color: #191970;
+    text-align: center;
+}
+h1{
+    font-size: 30px;
+    margin: 10px auto;
+    color: white;
+    display: inline-block;
+    text-align: left;
+    font-family: 'Anton', sans-serif;
+
+}
+body {
+    margin: 0;
+    display: flex;
+    flex-flow: column;
+    min-height: 100vh;
+}
+footer {
+    background: #ffffff;
+    height: 10px;
+    text-align: center;
+}
+.btn-square {
+    display: inline-block;
+    padding: 0.5em 1em;
+    text-decoration: none;
+    background: #668ad8;/*ボタン色*/
+    color: #FFF;
+    border-bottom: solid 4px #627295;
+    border-radius: 3px;
+}
+.btn-square:active {
+    /*ボタンを押したとき*/
+    -webkit-transform: translateY(4px);
+    transform: translateY(4px);/*下に動く*/
+    border-bottom: none;/*線を消す*/
+}
+.cp_ipselect {
+    position: relative;
+    width: 90%;
+    margin: 2em auto;
+    text-align: center;
+}
+.cp_sl06 {
+    position: relative;
+    font-family: inherit;
+    background-color: transparent;
+    width: 100%;
+    padding: 10px 10px 10px 0;
+    font-size: 18px;
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid rgba(0,0,0, 0.3);
+}
+.cp_sl06:focus {
+    outline: none;
+    border-bottom: 1px solid rgba(0,0,0, 0);
+}
+.cp_ipselect .cp_sl06 {
+    appearance: none;
+    -webkit-appearance:none
+}
+.cp_ipselect select::-ms-expand {
+display: none;
+}
+.cp_ipselect:after {
+    position: absolute;
+    top: 18px;
+    right: 10px;
+    width: 0;
+    height: 0;
+    padding: 0;
+    content: '';
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+}
+.cp_sl06_selectlabel {
+    color: rgba(0,0,0, 0.5);
+    font-size: 18px;
+    font-weight: normal;
+    position: absolute;
+    pointer-events: none;
+    left: 0;
+    top: 10px;
+    transition: 0.2s ease all;
+}
+    .cp_sl06:focus ~ .cp_sl06_selectlabel, .cp_sl06:valid ~ .cp_sl06_selectlabel {
+    color: #da3c41;
+    top: -20px;
+    transition: 0.2s ease all;
+    font-size: 14px;
+}
+.cp_sl06_selectbar {
+    position: relative;
+    display: block;
+    width: 100%;
+}
+.cp_sl06_selectbar:before, .cp_sl06_selectbar:after {
+    content: '';
+    height: 2px;
+    width: 0;
+    bottom: 1px;
+    position: absolute;
+    background: #da3c41;
+    transition: 0.2s ease all;
+}
+.cp_sl06_selectbar:before {
+    left: 50%;
+}
+.cp_sl06_selectbar:after {
+    right: 50%;
+}
+.cp_sl06:focus ~ .cp_sl06_selectbar:before, .cp_sl06:focus ~ .cp_sl06_selectbar:after {
+    width: 50%;
+}
+.cp_sl06_highlight {
+    position: absolute;
+    top: 25%;
+    left: 0;
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+#content {
+    width: 60%;
+    margin: 0 auto;
+    overflow-x: hidden;
+    flex: 1;
+}
+@media screen and (max-width: 812px) {
+    #content {
+        width: 98%;
+    }
+}
+
+form {
+    text-align: center;
+    padding: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    border-radius:10px;
+    border:1px solid #f5f5f5;
+    margin: 5px auto;
+}
+
+#foodList {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.food {
+    background-color: white; /* 色変更 */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    border-radius:10px;
+    border:1px solid #f5f5f5;
+    margin: 5px auto;
+    display: inline-block;
+    width: 95%;
+    transition: all 250ms 0ms ease;
+}
+
+.food-header {
+    padding: 3px;
+    text-align: center;
+}
+
+.food:hover {
+    background-color: lightcyan;
+    box-shadow: 0 0 5px -1px gray;
+}
+
+@media screen and (max-width: 812px) {
+    .food {
+        width: 90%;
+    }
+}
+.food-img {
+    max-width: 80%;
+    width: 120px;
+    height: 130px;
+    max-height: 150px;
+    margin: 10px auto;
+    margin-left: 5px;
+    margin-top: 0;
+    margin-right: 10px;
+    display: block;
+    box-shadow: 2px 2px 2px gray;
+}
+@media screen and (max-width: 430px) {
+    .food{
+        width: 95%;
+    }
+    .food-img {
+        width: 100px;
+        height: 110px;
+    }
+    .food-info2 {
+        font-size: 75%;
+    }
+}
+.demo_item {
+    width: 80px;
+    height: 80px;
+    background-image: url("http://illustrain.com/img/work/2016/illustrain06-norimono15.png");
+    background-size: 100% 100%;
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    display: block;
+    position: relative;
+}
+.demo_item.anime{
+    animation-name: upDown;
+    animation-iteration-count: infinite;
+    animation-duration: 0.1s;
+    animation-direction: alternate;
+    animation-timing-function: steps(2);
+    transition-duration: .3s;
+    transition-property: transform;
+}
+.demo_stage{
+    position: relative;
+    width: 100%;
+    height: 50px;
+    top: 0;
+    margin-bottom: 30px;
+    display: block;
+
+}
+.demo_wrap{
+    display: block;
+    position: absolute;
+    top: 0;
+    animation-fill-mode: forwards;
+    animation-timing-function: linear;
+    animation-duration: 10s;
+    animation-iteration-count: 1;
+    margin-right: -50px;
+}
+.demo_wrap[data-order="right"] {
+    animation-name: GoRight;
+}
+.demo_wrap[data-order="left"] {
+    animation-name: GoLeft;
+}
+
+[data-order="left"] > .demo_item {
+    transform: rotateY(180deg);
+}
+@keyframes GoRight {
+    0% {
+        right: 90%;
+    }
+    100% {
+        right: 10%;
+    }
+}
+@keyframes GoLeft {
+    0% {
+        right: 10%;
+    }
+    100% {
+        right: 90%;
+    }
+}
+@keyframes upDown {
+    0% {
+        top: 0;
+    }
+    100% {
+        top: 3px;
+    }
+}
